@@ -38,7 +38,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onSelectLocation, onUpdateLayers }) =
             if (res.data.results.length === 0) {
                 alert('검색 결과가 없습니다.');
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Search failed:', error);
             const errorMsg = error.response?.data?.error || '검색 중 오류가 발생했습니다.';
             alert(`검색 실패: ${errorMsg}`);

@@ -59,7 +59,8 @@ const MiniMap: React.FC<MiniMapProps> = ({ center, className }) => {
         const cadastralSource = new VectorSource({
             format: new GeoJSON(),
             loader: async function (extent, resolution, projection) {
-                const url = `/api/vworld/wfs?typeName=lp_pa_cbnd_bubun&bbox=${extent.join(',')}`;
+                const domain = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+                const url = `https://api.vworld.kr/req/wfs?SERVICE=WFS&REQUEST=GetFeature&TYPENAME=lp_pa_cbnd_bubun&OUTPUT=application/json&VERSION=1.1.0&KEY=${VWORLD_API_KEY}&DOMAIN=${domain}&bbox=${extent.join(',')}`;
                 try {
                     const response = await fetch(url);
                     if (!response.ok) throw new Error(`Status ${response.status}`);

@@ -22,10 +22,21 @@ export function useRoadAnalysis(pnu: string | null) {
             setError(null);
             try {
                 // 1. Fetch Land Parcel Geometry
-                const landRes = await axios.get('/api/vworld/wfs', {
+                const domain = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+                const VWORLD_API_KEY = process.env.NEXT_PUBLIC_VWORLD_API_KEY;
+
+                // 1. Fetch Land Parcel Geometry (Direct to V-World)
+                const landRes = await axios.get('https://api.vworld.kr/req/wfs', {
                     params: {
-                        typeName: 'lp_pa_cbnd_bubun',
-                        pnu: pnu,
+                        SERVICE: 'WFS',
+                        REQUEST: 'GetFeature',
+                        TYPENAME: 'lp_pa_cbnd_bubun',
+                        OUTPUT: 'application/json',
+                        VERSION: '1.1.0',
+                        KEY: VWORLD_API_KEY,
+                        DOMAIN: domain,
+                        MAXFEATURES: '1',
+                        FILTER: `<Filter><PropertyIsEqualTo><PropertyName>pnu</PropertyName><Literal>${pnu}</Literal></PropertyIsEqualTo></Filter>`
                     }
                 });
 
@@ -44,10 +55,18 @@ export function useRoadAnalysis(pnu: string | null) {
                 // 2. Fetch Nearby Roads (Road Network Layer)
                 // Using 'lt_l_sprd' (Road Centerline) or 'lt_c_usfsff001' (Road Zone)
                 // 'lt_l_upis_uq151' is Urban Planning Facility (Road) - often better for width info
-                const roadRes = await axios.get('/api/vworld/wfs', {
+                // 2. Fetch Nearby Roads (Direct to V-World)
+                const roadRes = await axios.get('https://api.vworld.kr/req/wfs', {
                     params: {
-                        typeName: 'lt_l_upis_uq151', // Urban Planning Road
-                        bbox: expandedBbox,
+                        SERVICE: 'WFS',
+                        REQUEST: 'GetFeature',
+                        TYPENAME: 'lt_l_upis_uq151', // Urban Planning Road
+                        OUTPUT: 'application/json',
+                        VERSION: '1.1.0',
+                        KEY: VWORLD_API_KEY,
+                        DOMAIN: domain,
+                        BBOX: expandedBbox,
+                        SRSNAME: 'EPSG:4326' // Ensure correct CRS if needed, though turf usually handles 4326
                     }
                 });
 

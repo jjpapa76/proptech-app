@@ -11,6 +11,7 @@ import { analyzePermissibleActs } from '@/lib/analysis/permissible_acts';
 import { LayerDefinition } from '../map/layerConfig';
 import { MARKET_INDICATORS } from '@/constants/market_data';
 import { useRoadAnalysis } from '@/hooks/useRoadAnalysis';
+import { searchAddressClient } from '@/lib/api/vworld-client';
 
 interface SidebarProps {
     onSelectLocation: (center: { x: number; y: number }, pnu: string) => void;
@@ -33,14 +34,15 @@ const Sidebar: React.FC<SidebarProps> = ({ onSelectLocation, onUpdateLayers }) =
         if (!query) return;
         setLoading(true);
         try {
-            const res = await axios.get(`/api/vworld/search?query=${query}`);
-            setSearchResults(res.data.results);
-            if (res.data.results.length === 0) {
+            // Use client-side search (JSONP) to bypass Vercel server IP blocking
+            const results = await searchAddressClient(query);
+            setSearchResults(results);
+            if (results.length === 0) {
                 alert('검색 결과가 없습니다.');
             }
         } catch (error: any) {
             console.error('Search failed:', error);
-            const errorMsg = error.response?.data?.error || '검색 중 오류가 발생했습니다.';
+            const errorMsg = error.message || '검색 중 오류가 발생했습니다.';
             alert(`검색 실패: ${errorMsg}`);
         } finally {
             setLoading(false);

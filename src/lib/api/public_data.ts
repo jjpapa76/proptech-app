@@ -5,14 +5,14 @@ const PUBLIC_DATA_API_KEY = process.env.NEXT_PUBLIC_DATA_GO_KR_API_KEY;
 const TOJI_EUM_API_KEY = process.env.TOJI_EUM_API_KEY || PUBLIC_DATA_API_KEY;
 
 // Base URLs
-const LAND_USE_URL = 'http://apis.data.go.kr/1613000/NSOLandUseInfoService';
-const LAND_CHAR_URL = 'http://apis.data.go.kr/1613000/LandCharacteristicsService';
-const BLD_URL = 'http://apis.data.go.kr/1613000/BldRgstService_v2';
-const MOUNTAIN_URL = 'http://apis.data.go.kr/1400000/ForestInfoService'; // Example
-const CULTURE_URL = 'http://www.cha.go.kr/cha/SearchKindOpenapi.do'; // Example
-const COMMERCIAL_URL = 'http://apis.data.go.kr/B553077/api/open/sdsc2';
-const PERMIT_URL = 'http://apis.data.go.kr/1613000/ArchPmsService_v2';
-const UNSOLD_URL = 'http://apis.data.go.kr/1613000/MIFHService';
+const LAND_USE_URL = 'https://apis.data.go.kr/1613000/NSOLandUseInfoService';
+const LAND_CHAR_URL = 'https://apis.data.go.kr/1613000/LandCharacteristicsService';
+const BLD_URL = 'https://apis.data.go.kr/1613000/BldRgstService_v2';
+const MOUNTAIN_URL = 'https://apis.data.go.kr/1400000/ForestInfoService'; // Example
+const CULTURE_URL = 'https://www.cha.go.kr/cha/SearchKindOpenapi.do'; // Example
+const COMMERCIAL_URL = 'https://apis.data.go.kr/B553077/api/open/sdsc2';
+const PERMIT_URL = 'https://apis.data.go.kr/1613000/ArchPmsService_v2';
+const UNSOLD_URL = 'https://apis.data.go.kr/1613000/MIFHService';
 
 const parser = new XMLParser({
     ignoreAttributes: false,
@@ -62,10 +62,15 @@ async function fetchAndParse(url: string, params: any, apiKey: string = PUBLIC_D
     }
 
     try {
+        // IMPORTANT: Decode the key first to prevent double-encoding by axios
+        // If the user provided an already encoded key (containing %), this fixes it.
+        // If they provided a raw key, decodeURIComponent doesn't hurt (usually).
+        const decodedKey = decodeURIComponent(apiKey);
+
         const response = await axios.get(url, {
             params: {
                 ...params,
-                serviceKey: apiKey,
+                serviceKey: decodedKey,
                 format: 'xml',
             },
             timeout: 5000, // 5s timeout

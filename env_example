@@ -1,0 +1,15 @@
+# V-World API Key (Map & Search)
+# Get it from: https://www.vworld.kr/dev/v4dv_apikey_s001.do
+NEXT_PUBLIC_VWORLD_API_KEY=
+
+# Public Data Portal API Key (General)
+# Get it from: https://www.data.go.kr/
+NEXT_PUBLIC_DATA_GO_KR_API_KEY=
+
+# Toji-eum (Land Use Regulation) Specific Credentials
+# If different from the general Public Data Portal key
+TOJI_EUM_API_ID=
+TOJI_EUM_API_KEY=
+
+# Base URL (for V-World WMS Domain check)
+NEXT_PUBLIC_BASE_URL=http://localhost:3000

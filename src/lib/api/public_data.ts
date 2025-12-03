@@ -73,7 +73,7 @@ async function fetchAndParse(url: string, params: any, apiKey: string = PUBLIC_D
                 serviceKey: decodedKey,
                 format: 'xml',
             },
-            timeout: 5000, // 5s timeout
+            timeout: 10000, // Increased to 10s
         });
 
         const parsed = parser.parse(response.data);
@@ -86,8 +86,12 @@ async function fetchAndParse(url: string, params: any, apiKey: string = PUBLIC_D
 
         const items = parsed.response?.body?.items?.item || parsed.result?.body?.items?.item;
         return items;
-    } catch (error) {
-        console.error(`API Error (${url}):`, error);
+    } catch (error: any) {
+        console.error(`API Error (${url}):`, error.message);
+        if (error.response) {
+            console.error('Error Status:', error.response.status);
+            console.error('Error Data:', error.response.data);
+        }
         return null;
     }
 }

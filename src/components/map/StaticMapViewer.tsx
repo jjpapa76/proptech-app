@@ -25,7 +25,10 @@ const StaticMapViewer: React.FC<StaticMapViewerProps> = ({ center, address }) =>
     // Layers: Cadastral + Zoning
     const layers = 'lp_pa_cbnd_bubun,lp_pa_cbnd_bonbun,lt_c_uq111';
 
-    const imageUrl = `https://api.vworld.kr/req/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&LAYERS=${layers}&STYLES=,&CRS=EPSG:4326&BBOX=${bbox}&WIDTH=600&HEIGHT=600&FORMAT=image/png&TRANSPARENT=false&BGCOLOR=0xFFFFFF&KEY=${VWORLD_API_KEY}&DOMAIN=${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}`;
+    // Use window.location.hostname if available (client-side), otherwise fallback
+    const domain = typeof window !== 'undefined' ? window.location.hostname : (process.env.NEXT_PUBLIC_BASE_URL || 'localhost');
+
+    const imageUrl = `https://api.vworld.kr/req/wms?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&LAYERS=${layers}&STYLES=,&CRS=EPSG:4326&BBOX=${bbox}&WIDTH=600&HEIGHT=600&FORMAT=image/png&TRANSPARENT=false&BGCOLOR=0xFFFFFF&KEY=${VWORLD_API_KEY}&DOMAIN=${domain}`;
 
     const handleDownload = async () => {
         setLoading(true);

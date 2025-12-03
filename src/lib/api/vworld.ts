@@ -95,7 +95,7 @@ export async function searchAddress(query: string): Promise<VWorldSearchResult[]
       return response.data.response.result?.items || [];
     } catch (error) {
       console.error(`V-World Search API Error (${category}):`, error);
-      return [];
+      throw error;
     }
   };
 

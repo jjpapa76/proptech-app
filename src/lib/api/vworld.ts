@@ -87,9 +87,9 @@ export async function searchAddress(query: string): Promise<VWorldSearchResult[]
         if (response.data.response.status === 'NOT_FOUND') {
           return [];
         }
-        // Log error but don't throw to allow other category to succeed
-        console.warn(`V-World API Error (${category}):`, response.data.response.error?.text);
-        return [];
+        // Throw error to be caught by the caller
+        const errorMsg = response.data.response.error?.text || 'Unknown V-World API Error';
+        throw new Error(errorMsg);
       }
 
       return response.data.response.result?.items || [];

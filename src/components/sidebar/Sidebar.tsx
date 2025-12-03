@@ -40,7 +40,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onSelectLocation, onUpdateLayers }) =
             }
         } catch (error) {
             console.error('Search failed:', error);
-            alert('검색 중 오류가 발생했습니다.');
+            const errorMsg = error.response?.data?.error || '검색 중 오류가 발생했습니다.';
+            alert(`검색 실패: ${errorMsg}`);
         } finally {
             setLoading(false);
         }
@@ -71,7 +72,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onSelectLocation, onUpdateLayers }) =
                 setPermissibleActs(acts);
             }
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Analysis failed:', error);
             alert('데이터 분석 중 오류가 발생했습니다.');
         } finally {

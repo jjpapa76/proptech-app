@@ -40,14 +40,16 @@ const MiniMap: React.FC<MiniMapProps> = ({ center, className }) => {
             }),
         });
 
-        // 2. Zoning Layer (WMS) - 용도지역
+        // 2. Zoning Layer (WMS) - 용도지역 (Direct to V-World)
         const zoningLayer = new TileLayer({
             source: new TileWMS({
-                url: '/api/vworld/wms',
+                url: 'https://api.vworld.kr/req/wms',
                 params: {
                     LAYERS: 'lt_c_uq111', // 용도지역
                     TILED: true,
                     STYLES: 'lt_c_uq111',
+                    KEY: VWORLD_API_KEY,
+                    DOMAIN: typeof window !== 'undefined' ? window.location.hostname : 'localhost',
                 },
                 serverType: 'geoserver',
                 crossOrigin: 'anonymous',
